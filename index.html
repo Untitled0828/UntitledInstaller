@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modpack JSON Generator</title>
+  <title>Modpack JSON 생성기</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -24,19 +24,18 @@
         <input type="text" class="mod-name" placeholder="모드 이름" required>
         <input type="text" class="mod-url" placeholder="모드 URL" required>
         <button type="button" class="remove-mod">제거</button>
+        <h4>종속성 추가</h4>
+        <div class="dependencies">
+          <div class="dependency-entry">
+            <input type="text" class="dep-name" placeholder="종속성 이름" required>
+            <input type="text" class="dep-url" placeholder="종속성 URL" required>
+            <button type="button" class="remove-dependency">제거</button>
+          </div>
+        </div>
+        <button type="button" class="add-dependency">종속성 추가</button>
       </div>
     </div>
     <button type="button" id="addMod">모드 추가</button><br><br>
-
-    <h3>종속성</h3>
-    <div id="dependencies">
-      <div class="dependency-entry">
-        <input type="text" class="dep-name" placeholder="종속성 이름" required>
-        <input type="text" class="dep-url" placeholder="종속성 URL" required>
-        <button type="button" class="remove-dependency">제거</button>
-      </div>
-    </div>
-    <button type="button" id="addDependency">종속성 추가</button><br><br>
 
     <button type="submit">JSON 생성</button>
   </form>
