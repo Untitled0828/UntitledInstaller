@@ -165,7 +165,7 @@
           // ModList에 모드 추가
           modList[modName] = modUrl;
 
-          // 종속성 추가
+          // 종속성 리스트
           const depList = {};
           mod.querySelectorAll('.dependency').forEach(dep => {
             const depName = dep.querySelector('.depName').value;
