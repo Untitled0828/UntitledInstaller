@@ -19,13 +19,18 @@ function addModField() {
     <input type="text" class="modName" placeholder="모드 이름">
     <label>모드 URL:</label>
     <input type="url" class="modUrl" placeholder="모드 다운로드 URL">
+    <button type="button" class="addDependencyBtn">종속성 추가</button>
+    <div class="modDependencies"></div>
   `;
   
   modListDiv.appendChild(modDiv);
+
+  // 종속성 추가 버튼 이벤트 리스너 추가
+  modDiv.querySelector('.addDependencyBtn').addEventListener('click', () => addDependencyField(modDiv));
 }
 
 // 종속성 입력 필드 추가
-function addDependencyField() {
+function addDependencyField(modDiv = null) {
   const depDiv = document.createElement('div');
   depDiv.classList.add('dependency');
 
@@ -35,8 +40,14 @@ function addDependencyField() {
     <label>종속성 URL:</label>
     <input type="url" class="depUrl" placeholder="종속성 다운로드 URL">
   `;
-  
-  dependenciesDiv.appendChild(depDiv);
+
+  if (modDiv) {
+    // 모드에 종속성 추가
+    modDiv.querySelector('.modDependencies').appendChild(depDiv);
+  } else {
+    // 종속성이 모드에 속하지 않고 독립적으로 추가될 때
+    dependenciesDiv.appendChild(depDiv);
+  }
 }
 
 // JSON 생성 및 출력
@@ -53,17 +64,21 @@ function generateJSON() {
     const modName = mod.querySelector('.modName').value;
     const modUrl = mod.querySelector('.modUrl').value;
     if (modName && modUrl) {
-      modList[modName] = modUrl;
-    }
-  });
+      // 종속성 처리
+      const dependencies = {};
+      mod.querySelectorAll('.dependency').forEach(dep => {
+        const depName = dep.querySelector('.depName').value;
+        const depUrl = dep.querySelector('.depUrl').value;
+        if (depName && depUrl) {
+          dependencies[depName] = depUrl;
+        }
+      });
 
-  // 종속성 리스트
-  const dependencies = {};
-  document.querySelectorAll('.dependency').forEach(dep => {
-    const depName = dep.querySelector('.depName').value;
-    const depUrl = dep.querySelector('.depUrl').value;
-    if (depName && depUrl) {
-      dependencies[depName] = depUrl;
+      // 모드와 종속성을 그룹화
+      modList[modName] = modUrl;
+      if (Object.keys(dependencies).length > 0) {
+        modList[modName] = { url: modUrl, dependencies: dependencies };
+      }
     }
   });
 
@@ -73,8 +88,7 @@ function generateJSON() {
     name: name,
     author: author,
     description: description,
-    ModList: modList,
-    Dependencies: dependencies
+    ModList: modList
   };
 
   jsonOutput.textContent = JSON.stringify(json, null, 2);
