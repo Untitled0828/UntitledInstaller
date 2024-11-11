@@ -4,7 +4,113 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Modpack JSON 생성기</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 1.5em;
+      margin-top: 30px;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    label {
+      font-size: 1em;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    textarea {
+      resize: vertical;
+      height: 100px;
+    }
+
+    button {
+      padding: 8px 12px;
+      font-size: 1em;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #modList {
+      margin-top: 20px;
+    }
+
+    .mod-entry {
+      background-color: #f9f9f9;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .mod-entry input[type="text"] {
+      margin-bottom: 10px;
+    }
+
+    .remove-mod {
+      background-color: #dc3545;
+      border-radius: 4px;
+      color: white;
+      padding: 4px 8px;
+      font-size: 0.9em;
+      cursor: pointer;
+    }
+
+    .remove-mod:hover {
+      background-color: #c82333;
+    }
+
+    h4 {
+      margin-top: 10px;
+      font-size: 1.2em;
+    }
+
+    pre {
+      background-color: #333;
+      color: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: monospace;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
 </head>
 <body>
   <h1>모드팩 JSON 생성기</h1>
@@ -42,6 +148,79 @@
   <h2>생성된 JSON:</h2>
   <pre id="jsonOutput"></pre>
 
-  <script src="script.js"></script>
+  <script>
+    document.getElementById('addMod').addEventListener('click', function() {
+      const modList = document.getElementById('modList');
+      const newMod = document.createElement('div');
+      newMod.classList.add('mod-entry');
+
+      newMod.innerHTML = `
+        <label for="mod-name">모드 이름:</label>
+        <input type="text" name="mod-name" placeholder="모드 이름을 입력하세요" required>
+        <label for="mod-url">모드 URL:</label>
+        <input type="text" name="mod-url" placeholder="모드 URL을 입력하세요" required>
+        <button type="button" class="remove-mod">모드 제거</button>
+      `;
+
+      modList.appendChild(newMod);
+
+      newMod.querySelector('.remove-mod').addEventListener('click', function() {
+        modList.removeChild(newMod);
+      });
+    });
+
+    document.getElementById('addDependency').addEventListener('click', function() {
+      const dependencyList = document.getElementById('dependencyList');
+      const newDependency = document.createElement('div');
+      newDependency.classList.add('mod-entry');
+
+      newDependency.innerHTML = `
+        <label for="dependency-name">종속성 이름:</label>
+        <input type="text" name="dependency-name" placeholder="종속성 이름을 입력하세요" required>
+        <label for="dependency-url">종속성 URL:</label>
+        <input type="text" name="dependency-url" placeholder="종속성 URL을 입력하세요" required>
+        <button type="button" class="remove-dependency">종속성 제거</button>
+      `;
+
+      dependencyList.appendChild(newDependency);
+
+      newDependency.querySelector('.remove-dependency').addEventListener('click', function() {
+        dependencyList.removeChild(newDependency);
+      });
+    });
+
+    document.getElementById('modpack-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const modList = {};
+      const mods = document.querySelectorAll('.mod-entry');
+      
+      mods.forEach(mod => {
+        const modName = mod.querySelector('input[name="mod-name"]').value;
+        const modUrl = mod.querySelector('input[name="mod-url"]').value;
+        modList[modName] = modUrl;
+      });
+
+      const dependencies = {};
+      const dependencyEntries = document.querySelectorAll('#dependencyList .mod-entry');
+      
+      dependencyEntries.forEach(dep => {
+        const depName = dep.querySelector('input[name="dependency-name"]').value;
+        const depUrl = dep.querySelector('input[name="dependency-url"]').value;
+        dependencies[depName] = depUrl;
+      });
+
+      const modpack = {
+        type: "modpack",
+        name: document.getElementById('name').value,
+        author: document.getElementById('author').value,
+        description: document.getElementById('description').value,
+        ModList: modList,
+        Dependencies: dependencies
+      };
+
+      document.getElementById('jsonOutput').textContent = JSON.stringify(modpack, null, 2);
+    });
+  </script>
 </body>
 </html>
