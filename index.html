@@ -59,6 +59,15 @@
       white-space: pre-wrap;
       word-wrap: break-word;
     }
+
+    .mod {
+      margin-bottom: 20px;
+    }
+
+    .dependency {
+      margin-top: 10px;
+    }
+
   </style>
 </head>
 <body>
@@ -79,11 +88,6 @@
 
       <button type="button" id="addModBtn">모드 추가</button>
 
-      <h3>종속성</h3>
-      <div id="dependencies"></div>
-
-      <button type="button" id="addDependencyBtn">종속성 추가</button>
-
       <h3>생성된 JSON</h3>
       <pre id="jsonOutput"></pre>
 
@@ -95,13 +99,11 @@
     // HTML 요소
     const jsonForm = document.getElementById('jsonForm');
     const modListDiv = document.getElementById('modList');
-    const dependenciesDiv = document.getElementById('dependencies');
     const jsonOutput = document.getElementById('jsonOutput');
     const downloadBtn = document.getElementById('downloadBtn');
 
-    // 모드와 종속성 추가 버튼
+    // 모드 추가 버튼
     document.getElementById('addModBtn').addEventListener('click', addModField);
-    document.getElementById('addDependencyBtn').addEventListener('click', addDependencyField);
 
     // 모드 입력 필드 추가
     function addModField() {
@@ -113,13 +115,20 @@
         <input type="text" class="modName" placeholder="모드 이름">
         <label>모드 URL:</label>
         <input type="url" class="modUrl" placeholder="모드 다운로드 URL">
+        <h4>종속성</h4>
+        <div class="dependencies"></div>
+        <button type="button" class="addDependencyBtn">종속성 추가</button>
       `;
+
+      modDiv.querySelector('.addDependencyBtn').addEventListener('click', function() {
+        addDependencyField(modDiv);
+      });
 
       modListDiv.appendChild(modDiv);
     }
 
     // 종속성 입력 필드 추가
-    function addDependencyField() {
+    function addDependencyField(modDiv) {
       const depDiv = document.createElement('div');
       depDiv.classList.add('dependency');
 
@@ -130,7 +139,7 @@
         <input type="url" class="depUrl" placeholder="종속성 다운로드 URL">
       `;
 
-      dependenciesDiv.appendChild(depDiv);
+      modDiv.querySelector('.dependencies').appendChild(depDiv);
     }
 
     // JSON 생성 및 출력
@@ -147,17 +156,18 @@
         const modName = mod.querySelector('.modName').value;
         const modUrl = mod.querySelector('.modUrl').value;
         if (modName && modUrl) {
-          modList[modName] = modUrl;
-        }
-      });
-
-      // 종속성 리스트
-      const dependencies = {};
-      document.querySelectorAll('.dependency').forEach(dep => {
-        const depName = dep.querySelector('.depName').value;
-        const depUrl = dep.querySelector('.depUrl').value;
-        if (depName && depUrl) {
-          dependencies[depName] = depUrl;
+          const dependencies = {};
+          mod.querySelectorAll('.dependency').forEach(dep => {
+            const depName = dep.querySelector('.depName').value;
+            const depUrl = dep.querySelector('.depUrl').value;
+            if (depName && depUrl) {
+              dependencies[depName] = depUrl;
+            }
+          });
+          modList[modName] = {
+            url: modUrl,
+            dependencies: dependencies
+          };
         }
       });
 
@@ -167,8 +177,7 @@
         name: name,
         author: author,
         description: description,
-        ModList: modList,
-        Dependencies: dependencies
+        ModList: modList
       };
 
       jsonOutput.textContent = JSON.stringify(json, null, 2);
