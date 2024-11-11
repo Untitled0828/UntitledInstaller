@@ -1,54 +1,25 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
-  margin: 0;
-  padding: 20px;
-}
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-  text-align: center;
-  color: #333;
-}
-
-label {
-  display: block;
-  margin: 10px 0 5px;
+  margin: 20px;
 }
 
 input, textarea {
   width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  margin: 5px 0;
 }
 
 button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
   margin-top: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
-button:hover {
-  background-color: #45a049;
+#modList, #dependencies {
+  margin-bottom: 20px;
 }
 
-pre {
-  background-color: #f5f5f5;
-  padding: 10px;
-  border-radius: 4px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+.mod-entry, .dependency-entry {
+  margin-bottom: 10px;
+}
+
+.remove-mod, .remove-dependency {
+  margin-left: 10px;
 }
