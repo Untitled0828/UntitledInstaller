@@ -1,6 +1,4 @@
 document.getElementById("addMod").addEventListener("click", addModEntry);
-document.getElementById("addDependency").addEventListener("click", addDependencyEntry);
-
 document.getElementById("modpackForm").addEventListener("submit", function(event) {
   event.preventDefault();
   
@@ -20,13 +18,17 @@ document.getElementById("modpackForm").addEventListener("submit", function(event
     const modUrl = entry.querySelector(".mod-url").value;
     modpack.ModList[modName] = modUrl;
 
-    // 종속성 가져오기
+    const dependencies = {};
     const depEntries = entry.querySelectorAll(".dependency-entry");
     depEntries.forEach(dep => {
       const depName = dep.querySelector(".dep-name").value;
       const depUrl = dep.querySelector(".dep-url").value;
-      modpack.Dependencies[depName] = depUrl;
+      dependencies[depName] = depUrl;
     });
+
+    if (Object.keys(dependencies).length > 0) {
+      modpack.Dependencies[modName] = dependencies;
+    }
   });
 
   // 생성된 JSON 출력
@@ -42,19 +44,23 @@ function addModEntry() {
     <input type="text" class="mod-name" placeholder="모드 이름" required>
     <input type="text" class="mod-url" placeholder="모드 URL" required>
     <button type="button" class="remove-mod">제거</button>
-    <div class="dependency-entry">
-      <input type="text" class="dep-name" placeholder="종속성 이름" required>
-      <input type="text" class="dep-url" placeholder="종속성 URL" required>
-      <button type="button" class="remove-dependency">제거</button>
+    <h4>종속성 추가</h4>
+    <div class="dependencies">
+      <div class="dependency-entry">
+        <input type="text" class="dep-name" placeholder="종속성 이름" required>
+        <input type="text" class="dep-url" placeholder="종속성 URL" required>
+        <button type="button" class="remove-dependency">제거</button>
+      </div>
     </div>
+    <button type="button" class="add-dependency">종속성 추가</button>
   `;
-  
+
   modEntry.querySelector(".remove-mod").addEventListener("click", () => modEntry.remove());
-  modEntry.querySelector(".remove-dependency").addEventListener("click", () => modEntry.querySelector(".dependency-entry").remove());
+  modEntry.querySelector(".add-dependency").addEventListener("click", addDependencyEntry);
   modList.appendChild(modEntry);
 }
 
-function addDependencyEntry() {
+function addDependencyEntry(event) {
   const dependencyEntry = document.createElement("div");
   dependencyEntry.classList.add("dependency-entry");
 
@@ -65,5 +71,5 @@ function addDependencyEntry() {
   `;
 
   dependencyEntry.querySelector(".remove-dependency").addEventListener("click", () => dependencyEntry.remove());
-  document.getElementById("dependencies").appendChild(dependencyEntry);
+  event.target.previousElementSibling.appendChild(dependencyEntry);
 }
