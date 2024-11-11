@@ -3,223 +3,184 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modpack JSON 생성기</title>
+  <title>JSON 자동 생성기</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
       margin: 0;
       padding: 20px;
-      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      font-size: 1.5em;
-      margin-top: 30px;
-    }
-
-    form {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 800px;
-      margin: 0 auto;
+      text-align: center;
+      color: #333;
     }
 
     label {
-      font-size: 1em;
-      margin-bottom: 8px;
-      display: inline-block;
+      display: block;
+      margin: 10px 0 5px;
     }
 
-    input[type="text"], textarea {
+    input, textarea {
       width: 100%;
       padding: 8px;
-      margin-bottom: 15px;
-      font-size: 1em;
-      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
       border-radius: 4px;
     }
 
-    textarea {
-      resize: vertical;
-      height: 100px;
-    }
-
     button {
-      padding: 8px 12px;
-      font-size: 1em;
-      background-color: #007bff;
+      background-color: #4CAF50;
       color: white;
+      padding: 10px 20px;
+      margin-top: 10px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
 
     button:hover {
-      background-color: #0056b3;
-    }
-
-    #modList {
-      margin-top: 20px;
-    }
-
-    .mod-entry {
-      background-color: #f9f9f9;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .mod-entry input[type="text"] {
-      margin-bottom: 10px;
-    }
-
-    .remove-mod {
-      background-color: #dc3545;
-      border-radius: 4px;
-      color: white;
-      padding: 4px 8px;
-      font-size: 0.9em;
-      cursor: pointer;
-    }
-
-    .remove-mod:hover {
-      background-color: #c82333;
-    }
-
-    h4 {
-      margin-top: 10px;
-      font-size: 1.2em;
+      background-color: #45a049;
     }
 
     pre {
-      background-color: #333;
-      color: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      font-family: monospace;
-      overflow-x: auto;
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
       white-space: pre-wrap;
       word-wrap: break-word;
     }
   </style>
 </head>
 <body>
-  <h1>모드팩 JSON 생성기</h1>
+  <div class="container">
+    <h1>JSON 자동 생성기</h1>
+    <form id="jsonForm">
+      <label for="name">이름:</label>
+      <input type="text" id="name" placeholder="모드팩 이름을 입력하세요">
 
-  <form id="modpack-form">
-    <label for="name">모드팩 이름:</label>
-    <input type="text" id="name" name="name" placeholder="모드팩 이름을 입력하세요" required>
+      <label for="author">저자:</label>
+      <input type="text" id="author" placeholder="저자 이름을 입력하세요">
 
-    <label for="author">저자:</label>
-    <input type="text" id="author" name="author" placeholder="저자 이름을 입력하세요" required>
+      <label for="description">설명:</label>
+      <textarea id="description" placeholder="모드팩 설명을 입력하세요"></textarea>
 
-    <label for="description">설명:</label>
-    <textarea id="description" name="description" placeholder="모드팩 설명을 입력하세요" required></textarea>
+      <h3>모드 리스트</h3>
+      <div id="modList"></div>
 
-    <h2>모드 목록</h2>
-    <div id="modList">
-      <div class="mod-entry">
-        <label for="mod1">모드 1 이름:</label>
-        <input type="text" id="mod1" name="mod1" placeholder="모드 이름을 입력하세요" required>
-        <label for="mod1-url">모드 1 URL:</label>
-        <input type="text" id="mod1-url" name="mod1-url" placeholder="모드 URL을 입력하세요" required>
-        <button type="button" class="remove-mod">모드 제거</button>
-      </div>
-    </div>
+      <button type="button" id="addModBtn">모드 추가</button>
 
-    <button type="button" id="addMod">모드 추가</button>
+      <h3>종속성</h3>
+      <div id="dependencies"></div>
 
-    <h2>종속성 목록</h2>
-    <div id="dependencyList"></div>
-    <button type="button" id="addDependency">종속성 추가</button>
+      <button type="button" id="addDependencyBtn">종속성 추가</button>
 
-    <button type="submit">JSON 생성</button>
-  </form>
+      <h3>생성된 JSON</h3>
+      <pre id="jsonOutput"></pre>
 
-  <h2>생성된 JSON:</h2>
-  <pre id="jsonOutput"></pre>
+      <button type="button" id="downloadBtn">JSON 파일 다운로드</button>
+    </form>
+  </div>
 
   <script>
-    document.getElementById('addMod').addEventListener('click', function() {
-      const modList = document.getElementById('modList');
-      const newMod = document.createElement('div');
-      newMod.classList.add('mod-entry');
+    // HTML 요소
+    const jsonForm = document.getElementById('jsonForm');
+    const modListDiv = document.getElementById('modList');
+    const dependenciesDiv = document.getElementById('dependencies');
+    const jsonOutput = document.getElementById('jsonOutput');
+    const downloadBtn = document.getElementById('downloadBtn');
 
-      newMod.innerHTML = `
-        <label for="mod-name">모드 이름:</label>
-        <input type="text" name="mod-name" placeholder="모드 이름을 입력하세요" required>
-        <label for="mod-url">모드 URL:</label>
-        <input type="text" name="mod-url" placeholder="모드 URL을 입력하세요" required>
-        <button type="button" class="remove-mod">모드 제거</button>
+    // 모드와 종속성 추가 버튼
+    document.getElementById('addModBtn').addEventListener('click', addModField);
+    document.getElementById('addDependencyBtn').addEventListener('click', addDependencyField);
+
+    // 모드 입력 필드 추가
+    function addModField() {
+      const modDiv = document.createElement('div');
+      modDiv.classList.add('mod');
+
+      modDiv.innerHTML = `
+        <label>모드 이름:</label>
+        <input type="text" class="modName" placeholder="모드 이름">
+        <label>모드 URL:</label>
+        <input type="url" class="modUrl" placeholder="모드 다운로드 URL">
       `;
 
-      modList.appendChild(newMod);
+      modListDiv.appendChild(modDiv);
+    }
 
-      newMod.querySelector('.remove-mod').addEventListener('click', function() {
-        modList.removeChild(newMod);
-      });
-    });
+    // 종속성 입력 필드 추가
+    function addDependencyField() {
+      const depDiv = document.createElement('div');
+      depDiv.classList.add('dependency');
 
-    document.getElementById('addDependency').addEventListener('click', function() {
-      const dependencyList = document.getElementById('dependencyList');
-      const newDependency = document.createElement('div');
-      newDependency.classList.add('mod-entry');
-
-      newDependency.innerHTML = `
-        <label for="dependency-name">종속성 이름:</label>
-        <input type="text" name="dependency-name" placeholder="종속성 이름을 입력하세요" required>
-        <label for="dependency-url">종속성 URL:</label>
-        <input type="text" name="dependency-url" placeholder="종속성 URL을 입력하세요" required>
-        <button type="button" class="remove-dependency">종속성 제거</button>
+      depDiv.innerHTML = `
+        <label>종속성 이름:</label>
+        <input type="text" class="depName" placeholder="종속성 이름">
+        <label>종속성 URL:</label>
+        <input type="url" class="depUrl" placeholder="종속성 다운로드 URL">
       `;
 
-      dependencyList.appendChild(newDependency);
+      dependenciesDiv.appendChild(depDiv);
+    }
 
-      newDependency.querySelector('.remove-dependency').addEventListener('click', function() {
-        dependencyList.removeChild(newDependency);
-      });
-    });
+    // JSON 생성 및 출력
+    jsonForm.addEventListener('input', generateJSON);
 
-    document.getElementById('modpack-form').addEventListener('submit', function(e) {
-      e.preventDefault();
+    function generateJSON() {
+      const name = document.getElementById('name').value;
+      const author = document.getElementById('author').value;
+      const description = document.getElementById('description').value;
 
+      // 모드 리스트
       const modList = {};
-      const mods = document.querySelectorAll('.mod-entry');
-      
-      mods.forEach(mod => {
-        const modName = mod.querySelector('input[name="mod-name"]').value;
-        const modUrl = mod.querySelector('input[name="mod-url"]').value;
-        modList[modName] = modUrl;
+      document.querySelectorAll('.mod').forEach(mod => {
+        const modName = mod.querySelector('.modName').value;
+        const modUrl = mod.querySelector('.modUrl').value;
+        if (modName && modUrl) {
+          modList[modName] = modUrl;
+        }
       });
 
+      // 종속성 리스트
       const dependencies = {};
-      const dependencyEntries = document.querySelectorAll('#dependencyList .mod-entry');
-      
-      dependencyEntries.forEach(dep => {
-        const depName = dep.querySelector('input[name="dependency-name"]').value;
-        const depUrl = dep.querySelector('input[name="dependency-url"]').value;
-        dependencies[depName] = depUrl;
+      document.querySelectorAll('.dependency').forEach(dep => {
+        const depName = dep.querySelector('.depName').value;
+        const depUrl = dep.querySelector('.depUrl').value;
+        if (depName && depUrl) {
+          dependencies[depName] = depUrl;
+        }
       });
 
-      const modpack = {
+      // JSON 객체
+      const json = {
         type: "modpack",
-        name: document.getElementById('name').value,
-        author: document.getElementById('author').value,
-        description: document.getElementById('description').value,
+        name: name,
+        author: author,
+        description: description,
         ModList: modList,
         Dependencies: dependencies
       };
 
-      document.getElementById('jsonOutput').textContent = JSON.stringify(modpack, null, 2);
+      jsonOutput.textContent = JSON.stringify(json, null, 2);
+    }
+
+    // JSON 파일 다운로드
+    downloadBtn.addEventListener('click', function() {
+      const blob = new Blob([jsonOutput.textContent], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${document.getElementById('name').value || 'modpack'}.json`;
+      link.click();
     });
   </script>
 </body>
