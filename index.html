@@ -235,7 +235,8 @@
 
           // 종속성 리스트 채우기
           if (jsonData.Dependencies && jsonData.Dependencies[modName]) {
-            jsonData.Dependencies[modName].forEach(dep => {
+            const depList = jsonData.Dependencies[modName];
+            depList.forEach(dep => {
               addDependencyField(lastModDiv);
               const lastDepDiv = lastModDiv.querySelector('.dependencies').lastElementChild;
               lastDepDiv.querySelector('.depName').value = dep.name;
