@@ -92,9 +92,7 @@
       <pre id="jsonOutput"></pre>
 
       <button type="button" id="downloadBtn">JSON 파일 다운로드</button>
-
-      <!-- 기존 JSON 파일 업로드 버튼 -->
-      <input type="file" id="uploadFile" accept=".json">
+      <button type="button" id="copyJsonBtn">JSON 복사</button>
     </form>
   </div>
 
@@ -104,7 +102,7 @@
     const modListDiv = document.getElementById('modList');
     const jsonOutput = document.getElementById('jsonOutput');
     const downloadBtn = document.getElementById('downloadBtn');
-    const uploadFile = document.getElementById('uploadFile');
+    const copyJsonBtn = document.getElementById('copyJsonBtn');
 
     // 모드 추가 버튼
     document.getElementById('addModBtn').addEventListener('click', addModField);
@@ -204,50 +202,19 @@
       link.click();
     });
 
-    // JSON 파일 불러오기
-    uploadFile.addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (file && file.type === 'application/json') {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const jsonData = JSON.parse(e.target.result);
-          populateForm(jsonData);
-        };
-        reader.readAsText(file);
+    // JSON 복사
+    copyJsonBtn.addEventListener('click', function() {
+      const jsonText = jsonOutput.textContent;
+      if (jsonText) {
+        const textarea = document.createElement('textarea');
+        textarea.value = jsonText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert('JSON이 복사되었습니다!');
       }
     });
-
-    // 폼에 기존 JSON 데이터 채우기
-    function populateForm(jsonData) {
-      // 이름, 저자, 설명 채우기
-      document.getElementById('name').value = jsonData.name || '';
-      document.getElementById('author').value = jsonData.author || '';
-      document.getElementById('description').value = jsonData.Description || '';
-
-      // 기존 모드 리스트 채우기
-      if (jsonData.ModList) {
-        // 기존 모드를 하나씩 추가
-        Object.keys(jsonData.ModList).forEach(modName => {
-          addModField();
-          const lastModDiv = modListDiv.lastElementChild;
-          lastModDiv.querySelector('.modName').value = modName;
-          lastModDiv.querySelector('.modUrl').value = jsonData.ModList[modName];
-
-          // 종속성 리스트 채우기
-          if (jsonData.Dependencies && jsonData.Dependencies[modName]) {
-            const depList = jsonData.Dependencies[modName];
-            depList.forEach(dep => {
-              addDependencyField(lastModDiv);
-              const lastDepDiv = lastModDiv.querySelector('.dependencies').lastElementChild;
-              lastDepDiv.querySelector('.depName').value = dep.name;
-              lastDepDiv.querySelector('.depUrl').value = dep.url;
-            });
-          }
-        });
-      }
-
-      generateJSON();
-    }
   </script>
 </body>
 </html>
