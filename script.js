@@ -1,104 +1,69 @@
-// HTML 요소
-const jsonForm = document.getElementById('jsonForm');
-const modListDiv = document.getElementById('modList');
-const dependenciesDiv = document.getElementById('dependencies');
-const jsonOutput = document.getElementById('jsonOutput');
-const downloadBtn = document.getElementById('downloadBtn');
+document.getElementById("addMod").addEventListener("click", addModEntry);
+document.getElementById("addDependency").addEventListener("click", addDependencyEntry);
 
-// 모드와 종속성 추가 버튼
-document.getElementById('addModBtn').addEventListener('click', addModField);
-document.getElementById('addDependencyBtn').addEventListener('click', addDependencyField);
-
-// 모드 입력 필드 추가
-function addModField() {
-  const modDiv = document.createElement('div');
-  modDiv.classList.add('mod');
-
-  modDiv.innerHTML = `
-    <label>모드 이름:</label>
-    <input type="text" class="modName" placeholder="모드 이름">
-    <label>모드 URL:</label>
-    <input type="url" class="modUrl" placeholder="모드 다운로드 URL">
-    <button type="button" class="addDependencyBtn">종속성 추가</button>
-    <div class="modDependencies"></div>
-  `;
+document.getElementById("modpackForm").addEventListener("submit", function(event) {
+  event.preventDefault();
   
-  modListDiv.appendChild(modDiv);
-
-  // 종속성 추가 버튼 이벤트 리스너 추가
-  modDiv.querySelector('.addDependencyBtn').addEventListener('click', () => addDependencyField(modDiv));
-}
-
-// 종속성 입력 필드 추가
-function addDependencyField(modDiv = null) {
-  const depDiv = document.createElement('div');
-  depDiv.classList.add('dependency');
-
-  depDiv.innerHTML = `
-    <label>종속성 이름:</label>
-    <input type="text" class="depName" placeholder="종속성 이름">
-    <label>종속성 URL:</label>
-    <input type="url" class="depUrl" placeholder="종속성 다운로드 URL">
-  `;
-
-  if (modDiv) {
-    // 모드에 종속성 추가
-    modDiv.querySelector('.modDependencies').appendChild(depDiv);
-  } else {
-    // 종속성이 모드에 속하지 않고 독립적으로 추가될 때
-    dependenciesDiv.appendChild(depDiv);
-  }
-}
-
-// JSON 생성 및 출력
-jsonForm.addEventListener('input', generateJSON);
-
-function generateJSON() {
-  const name = document.getElementById('name').value;
-  const author = document.getElementById('author').value;
-  const description = document.getElementById('description').value;
-
-  // 모드 리스트
-  const modList = {};
-  document.querySelectorAll('.mod').forEach(mod => {
-    const modName = mod.querySelector('.modName').value;
-    const modUrl = mod.querySelector('.modUrl').value;
-    if (modName && modUrl) {
-      // 종속성 처리
-      const dependencies = {};
-      mod.querySelectorAll('.dependency').forEach(dep => {
-        const depName = dep.querySelector('.depName').value;
-        const depUrl = dep.querySelector('.depUrl').value;
-        if (depName && depUrl) {
-          dependencies[depName] = depUrl;
-        }
-      });
-
-      // 모드와 종속성을 그룹화
-      modList[modName] = modUrl;
-      if (Object.keys(dependencies).length > 0) {
-        modList[modName] = { url: modUrl, dependencies: dependencies };
-      }
-    }
-  });
-
-  // JSON 객체
-  const json = {
+  const modpack = {
     type: "modpack",
-    name: name,
-    author: author,
-    description: description,
-    ModList: modList
+    name: document.getElementById("name").value,
+    author: document.getElementById("author").value,
+    Description: document.getElementById("description").value,
+    ModList: {},
+    Dependencies: {}
   };
 
-  jsonOutput.textContent = JSON.stringify(json, null, 2);
+  // 모드 리스트 가져오기
+  const modEntries = document.querySelectorAll(".mod-entry");
+  modEntries.forEach(entry => {
+    const modName = entry.querySelector(".mod-name").value;
+    const modUrl = entry.querySelector(".mod-url").value;
+    modpack.ModList[modName] = modUrl;
+
+    // 종속성 가져오기
+    const depEntries = entry.querySelectorAll(".dependency-entry");
+    depEntries.forEach(dep => {
+      const depName = dep.querySelector(".dep-name").value;
+      const depUrl = dep.querySelector(".dep-url").value;
+      modpack.Dependencies[depName] = depUrl;
+    });
+  });
+
+  // 생성된 JSON 출력
+  document.getElementById("jsonOutput").textContent = JSON.stringify(modpack, null, 2);
+});
+
+function addModEntry() {
+  const modList = document.getElementById("modList");
+  const modEntry = document.createElement("div");
+  modEntry.classList.add("mod-entry");
+
+  modEntry.innerHTML = `
+    <input type="text" class="mod-name" placeholder="모드 이름" required>
+    <input type="text" class="mod-url" placeholder="모드 URL" required>
+    <button type="button" class="remove-mod">제거</button>
+    <div class="dependency-entry">
+      <input type="text" class="dep-name" placeholder="종속성 이름" required>
+      <input type="text" class="dep-url" placeholder="종속성 URL" required>
+      <button type="button" class="remove-dependency">제거</button>
+    </div>
+  `;
+  
+  modEntry.querySelector(".remove-mod").addEventListener("click", () => modEntry.remove());
+  modEntry.querySelector(".remove-dependency").addEventListener("click", () => modEntry.querySelector(".dependency-entry").remove());
+  modList.appendChild(modEntry);
 }
 
-// JSON 파일 다운로드
-downloadBtn.addEventListener('click', function() {
-  const blob = new Blob([jsonOutput.textContent], { type: 'application/json' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `${document.getElementById('name').value || 'modpack'}.json`;
-  link.click();
-});
+function addDependencyEntry() {
+  const dependencyEntry = document.createElement("div");
+  dependencyEntry.classList.add("dependency-entry");
+
+  dependencyEntry.innerHTML = `
+    <input type="text" class="dep-name" placeholder="종속성 이름" required>
+    <input type="text" class="dep-url" placeholder="종속성 URL" required>
+    <button type="button" class="remove-dependency">제거</button>
+  `;
+
+  dependencyEntry.querySelector(".remove-dependency").addEventListener("click", () => dependencyEntry.remove());
+  document.getElementById("dependencies").appendChild(dependencyEntry);
+}
