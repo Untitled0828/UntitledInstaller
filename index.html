@@ -3,38 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON 자동 생성기</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Modpack JSON Generator</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>JSON 자동 생성기</h1>
-    <form id="jsonForm">
-      <label for="name">이름:</label>
-      <input type="text" id="name" placeholder="모드팩 이름을 입력하세요">
+  <h1>Modpack JSON 생성기</h1>
+  <form id="modpackForm">
+    <label for="name">모드팩 이름:</label>
+    <input type="text" id="name" required><br><br>
 
-      <label for="author">저자:</label>
-      <input type="text" id="author" placeholder="저자 이름을 입력하세요">
+    <label for="author">저자:</label>
+    <input type="text" id="author" required><br><br>
 
-      <label for="description">설명:</label>
-      <textarea id="description" placeholder="모드팩 설명을 입력하세요"></textarea>
+    <label for="description">설명:</label>
+    <textarea id="description" required></textarea><br><br>
 
-      <h3>모드 리스트</h3>
-      <div id="modList"></div>
+    <h3>모드 리스트</h3>
+    <div id="modList">
+      <div class="mod-entry">
+        <input type="text" class="mod-name" placeholder="모드 이름" required>
+        <input type="text" class="mod-url" placeholder="모드 URL" required>
+        <button type="button" class="remove-mod">제거</button>
+      </div>
+    </div>
+    <button type="button" id="addMod">모드 추가</button><br><br>
 
-      <button type="button" id="addModBtn">모드 추가</button>
+    <h3>종속성</h3>
+    <div id="dependencies">
+      <div class="dependency-entry">
+        <input type="text" class="dep-name" placeholder="종속성 이름" required>
+        <input type="text" class="dep-url" placeholder="종속성 URL" required>
+        <button type="button" class="remove-dependency">제거</button>
+      </div>
+    </div>
+    <button type="button" id="addDependency">종속성 추가</button><br><br>
 
-      <h3>종속성</h3>
-      <div id="dependencies"></div>
+    <button type="submit">JSON 생성</button>
+  </form>
 
-      <button type="button" id="addDependencyBtn">종속성 추가</button>
-
-      <h3>생성된 JSON</h3>
-      <pre id="jsonOutput"></pre>
-
-      <button type="button" id="downloadBtn">JSON 파일 다운로드</button>
-    </form>
-  </div>
+  <h2>생성된 JSON:</h2>
+  <pre id="jsonOutput"></pre>
 
   <script src="script.js"></script>
 </body>
