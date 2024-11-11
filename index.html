@@ -7,35 +7,34 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Modpack JSON 생성기</h1>
-  <form id="modpackForm">
+  <h1>모드팩 JSON 생성기</h1>
+
+  <form id="modpack-form">
     <label for="name">모드팩 이름:</label>
-    <input type="text" id="name" required><br><br>
+    <input type="text" id="name" name="name" placeholder="모드팩 이름을 입력하세요" required>
 
     <label for="author">저자:</label>
-    <input type="text" id="author" required><br><br>
+    <input type="text" id="author" name="author" placeholder="저자 이름을 입력하세요" required>
 
     <label for="description">설명:</label>
-    <textarea id="description" required></textarea><br><br>
+    <textarea id="description" name="description" placeholder="모드팩 설명을 입력하세요" required></textarea>
 
-    <h3>모드 리스트</h3>
+    <h2>모드 목록</h2>
     <div id="modList">
       <div class="mod-entry">
-        <input type="text" class="mod-name" placeholder="모드 이름" required>
-        <input type="text" class="mod-url" placeholder="모드 URL" required>
-        <button type="button" class="remove-mod">제거</button>
-        <h4>종속성 추가</h4>
-        <div class="dependencies">
-          <div class="dependency-entry">
-            <input type="text" class="dep-name" placeholder="종속성 이름" required>
-            <input type="text" class="dep-url" placeholder="종속성 URL" required>
-            <button type="button" class="remove-dependency">제거</button>
-          </div>
-        </div>
-        <button type="button" class="add-dependency">종속성 추가</button>
+        <label for="mod1">모드 1 이름:</label>
+        <input type="text" id="mod1" name="mod1" placeholder="모드 이름을 입력하세요" required>
+        <label for="mod1-url">모드 1 URL:</label>
+        <input type="text" id="mod1-url" name="mod1-url" placeholder="모드 URL을 입력하세요" required>
+        <button type="button" class="remove-mod">모드 제거</button>
       </div>
     </div>
-    <button type="button" id="addMod">모드 추가</button><br><br>
+
+    <button type="button" id="addMod">모드 추가</button>
+
+    <h2>종속성 목록</h2>
+    <div id="dependencyList"></div>
+    <button type="button" id="addDependency">종속성 추가</button>
 
     <button type="submit">JSON 생성</button>
   </form>
