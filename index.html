@@ -204,7 +204,7 @@
       link.click();
     });
 
-    // 기존 JSON 파일 불러오기
+    // JSON 파일 불러오기
     uploadFile.addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (file && file.type === 'application/json') {
@@ -224,17 +224,18 @@
       document.getElementById('author').value = jsonData.author || '';
       document.getElementById('description').value = jsonData.Description || '';
 
-      // 모드 리스트 채우기
+      // 기존 모드 리스트 채우기
       if (jsonData.ModList) {
-        jsonData.ModList.forEach(mod => {
+        // 기존 모드를 하나씩 추가
+        Object.keys(jsonData.ModList).forEach(modName => {
           addModField();
           const lastModDiv = modListDiv.lastElementChild;
-          lastModDiv.querySelector('.modName').value = mod.name;
-          lastModDiv.querySelector('.modUrl').value = mod.url;
+          lastModDiv.querySelector('.modName').value = modName;
+          lastModDiv.querySelector('.modUrl').value = jsonData.ModList[modName];
 
           // 종속성 리스트 채우기
-          if (jsonData.Dependencies && jsonData.Dependencies[mod.name]) {
-            jsonData.Dependencies[mod.name].forEach(dep => {
+          if (jsonData.Dependencies && jsonData.Dependencies[modName]) {
+            jsonData.Dependencies[modName].forEach(dep => {
               addDependencyField(lastModDiv);
               const lastDepDiv = lastModDiv.querySelector('.dependencies').lastElementChild;
               lastDepDiv.querySelector('.depName').value = dep.name;
