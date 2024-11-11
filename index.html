@@ -92,6 +92,9 @@
       <pre id="jsonOutput"></pre>
 
       <button type="button" id="downloadBtn">JSON 파일 다운로드</button>
+
+      <!-- 기존 JSON 파일 업로드 버튼 -->
+      <input type="file" id="uploadFile" accept=".json">
     </form>
   </div>
 
@@ -101,6 +104,7 @@
     const modListDiv = document.getElementById('modList');
     const jsonOutput = document.getElementById('jsonOutput');
     const downloadBtn = document.getElementById('downloadBtn');
+    const uploadFile = document.getElementById('uploadFile');
 
     // 모드 추가 버튼
     document.getElementById('addModBtn').addEventListener('click', addModField);
@@ -183,7 +187,7 @@
         type: "modpack",
         name: name,
         author: author,
-        description: description,
+        Description: description,  // 'description' -> 'Description'로 수정
         ModList: modList,
         Dependencies: dependencies
       };
@@ -199,6 +203,49 @@
       link.download = `${document.getElementById('name').value || 'modpack'}.json`;
       link.click();
     });
+
+    // 기존 JSON 파일 불러오기
+    uploadFile.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file && file.type === 'application/json') {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const jsonData = JSON.parse(e.target.result);
+          populateForm(jsonData);
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    // 폼에 기존 JSON 데이터 채우기
+    function populateForm(jsonData) {
+      // 이름, 저자, 설명 채우기
+      document.getElementById('name').value = jsonData.name || '';
+      document.getElementById('author').value = jsonData.author || '';
+      document.getElementById('description').value = jsonData.Description || '';
+
+      // 모드 리스트 채우기
+      if (jsonData.ModList) {
+        for (const [modName, modUrl] of Object.entries(jsonData.ModList)) {
+          addModField();
+          const lastModDiv = modListDiv.lastElementChild;
+          lastModDiv.querySelector('.modName').value = modName;
+          lastModDiv.querySelector('.modUrl').value = modUrl;
+
+          // 종속성 리스트 채우기
+          if (jsonData.Dependencies && jsonData.Dependencies[modName]) {
+            jsonData.Dependencies[modName].forEach(dep => {
+              addDependencyField(lastModDiv);
+              const lastDepDiv = lastModDiv.querySelector('.dependencies').lastElementChild;
+              lastDepDiv.querySelector('.depName').value = dep.name;
+              lastDepDiv.querySelector('.depUrl').value = dep.url;
+            });
+          }
+        }
+      }
+
+      generateJSON();
+    }
   </script>
 </body>
 </html>
