@@ -87,6 +87,20 @@
       background-color: #3b8f8f;
     }
 
+    .removeDependencyBtn {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 5px 10px;
+      margin-top: 5px;
+    }
+
+    .removeDependencyBtn:hover {
+      background-color: #e53935;
+    }
+
   </style>
 </head>
 <body>
@@ -158,7 +172,13 @@
         <input type="text" class="depName" placeholder="종속성 이름">
         <label>종속성 URL:</label>
         <input type="url" class="depUrl" placeholder="종속성 다운로드 URL">
+        <button type="button" class="removeDependencyBtn">삭제</button>
       `;
+
+      // 종속성 삭제 버튼 이벤트 리스너 추가
+      depDiv.querySelector('.removeDependencyBtn').addEventListener('click', function() {
+        depDiv.remove();  // 종속성 항목 삭제
+      });
 
       modDiv.querySelector('.dependencies').appendChild(depDiv);
     }
