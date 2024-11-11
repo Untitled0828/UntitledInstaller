@@ -152,22 +152,29 @@
 
       // 모드 리스트
       const modList = {};
+      const dependencies = {};
+
       document.querySelectorAll('.mod').forEach(mod => {
         const modName = mod.querySelector('.modName').value;
         const modUrl = mod.querySelector('.modUrl').value;
         if (modName && modUrl) {
-          const dependencies = {};
+          // ModList에 모드 추가
+          modList[modName] = modUrl;
+
+          // 종속성 추가
+          const depList = {};
           mod.querySelectorAll('.dependency').forEach(dep => {
             const depName = dep.querySelector('.depName').value;
             const depUrl = dep.querySelector('.depUrl').value;
             if (depName && depUrl) {
-              dependencies[depName] = depUrl;
+              depList[depName] = depUrl;
             }
           });
-          modList[modName] = {
-            url: modUrl,
-            dependencies: dependencies
-          };
+
+          // 종속성 있으면 Dependencies 객체에 추가
+          if (Object.keys(depList).length > 0) {
+            dependencies[modName] = depList;
+          }
         }
       });
 
@@ -177,7 +184,8 @@
         name: name,
         author: author,
         description: description,
-        ModList: modList
+        ModList: modList,
+        Dependencies: dependencies
       };
 
       jsonOutput.textContent = JSON.stringify(json, null, 2);
