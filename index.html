@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON 자동 생성기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>JSON 자동 생성기</h1>
+    <form id="jsonForm">
+      <label for="name">이름:</label>
+      <input type="text" id="name" placeholder="모드팩 이름을 입력하세요">
+
+      <label for="author">저자:</label>
+      <input type="text" id="author" placeholder="저자 이름을 입력하세요">
+
+      <label for="description">설명:</label>
+      <textarea id="description" placeholder="모드팩 설명을 입력하세요"></textarea>
+
+      <h3>모드 리스트</h3>
+      <div id="modList"></div>
+
+      <button type="button" id="addModBtn">모드 추가</button>
+
+      <h3>종속성</h3>
+      <div id="dependencies"></div>
+
+      <button type="button" id="addDependencyBtn">종속성 추가</button>
+
+      <h3>생성된 JSON</h3>
+      <pre id="jsonOutput"></pre>
+
+      <button type="button" id="downloadBtn">JSON 파일 다운로드</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
