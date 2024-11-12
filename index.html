@@ -3,257 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON 자동 생성기</title>
+  <title>UntitledInstaller Config 생성기</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
-      margin: 0;
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #fff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-
-    label {
-      display: block;
-      margin: 10px 0 5px;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-
-    button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    pre {
-      background-color: #f5f5f5;
-      padding: 10px;
-      border-radius: 4px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-
-    .mod {
-      margin-bottom: 30px; /* 각 모드 간에 구분을 위한 여백 */
-      padding: 15px;
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-    }
-
-    .dependency {
-      margin-top: 15px;
-      padding: 10px;
-      background-color: #f1f1f1;
-      border-radius: 5px;
-      border: 1px solid #ddd;
-      margin-bottom: 15px; /* 종속성 항목 간의 구분을 위한 여백 */
-    }
-
-    .dependency label,
-    .dependency input {
-      margin-bottom: 5px;
-    }
-
-    .addDependencyBtn {
-      margin-top: 10px;
-      background-color: #3b8f8f;
-    }
-
-    .removeDependencyBtn {
-      background-color: #f44336;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      padding: 5px 10px;
-      margin-top: 5px;
-    }
-
-    .removeDependencyBtn:hover {
-      background-color: #e53935;
-    }
-
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:20px;background-color:#f0f4f8;color:#333}.container{display:flex;flex-wrap:wrap;justify-content:space-between;max-width:1200px;margin:0 auto;padding:20px;background-color:#fff;box-shadow:0 4px 6px rgba(0,0,0,0.1);border-radius:12px}.form-section,.json-section{flex:1;min-width:300px;max-width:48%;margin-bottom:20px;padding:20px}.json-section{background-color:#f8f9fa;border-left:2px solid #ddd;padding:20px;border-radius:0 8px 8px 0}h1{text-align:center;color:#2c3e50;margin-bottom:30px;font-size:24px}label{display:block;margin:10px 0 5px;color:#34495e;font-weight:bold}input,textarea{width:100%;padding:10px;margin-bottom:15px;border:1px solid #bdc3c7;border-radius:4px;box-sizing:border-box;transition:border-color .3s ease;font-size:14px}input:focus,textarea:focus{border-color:#3498db;outline:none;box-shadow:0 0 5px rgba(52,152,219,.5)}button{background-color:#3498db;color:white;padding:10px 20px;margin-top:10px;border:none;border-radius:4px;cursor:pointer;transition:background-color .3s,transform .1s;font-size:14px}button:hover{background-color:#2980b9;transform:translateY(-2px)}pre{background-color:#f5f5f5;padding:15px;border-radius:4px;white-space:pre-wrap;word-wrap:break-word;max-height:400px;overflow-y:auto;font-size:14px;line-height:1.5}.button-container{display:flex;justify-content:center;gap:10px;margin-top:15px}.mod,.dependency{margin-bottom:25px;padding:15px;background-color:#ecf0f1;border-radius:8px;border:1px solid #bdc3c7;box-shadow:0 2px 4px rgba(0,0,0,.05)}.mod{background-color:#e8f6f3;border-color:#1abc9c}.dependency{background-color:#fef9e7;border-color:#f1c40f;margin-left:20px}.removeModBtn,.removeDependencyBtn{background-color:#e74c3c;padding:5px 10px;margin-bottom:10px;font-size:12px}.removeModBtn:hover,.removeDependencyBtn:hover{background-color:#c0392b}.addDependencyBtn{background-color:#f1c40f;color:#34495e;margin-top:10px}.addDependencyBtn:hover{background-color:#f39c12}#addModBtn{background-color:#2ecc71;margin-top:20px}#addModBtn:hover{background-color:#27ae60}.button-container button{background-color:#34495e}.button-container button:hover{background-color:#2c3e50}h3,h4{color:#2c3e50;margin-top:20px;margin-bottom:15px}.dependencies{margin-top:15px}.input-group{margin-bottom:10px}.input-group label{display:block;margin-bottom:5px;font-weight:normal;color:#7f8c8d}
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>JSON 자동 생성기</h1>
-    <form id="jsonForm">
-      <label for="name">이름:</label>
-      <input type="text" id="name" placeholder="모드팩 이름을 입력하세요">
-
-      <label for="author">저자:</label>
-      <input type="text" id="author" placeholder="저자 이름을 입력하세요">
-
-      <label for="description">설명:</label>
-      <textarea id="description" placeholder="모드팩 설명을 입력하세요"></textarea>
-
-      <h3>모드 리스트</h3>
-      <div id="modList"></div>
-
-      <button type="button" id="addModBtn">모드 추가</button>
-
+    <div class="form-section">
+      <h1>UntitledInstaller Config 생성기</h1>
+      <form id="jF">
+        <div class="input-group"><label for="n">모드팩 이름:</label><input type="text" id="n" placeholder="예: 나의 멋진 모드팩"></div>
+        <div class="input-group"><label for="a">저자:</label><input type="text" id="a" placeholder="예: 홍길동"></div>
+        <div class="input-group"><label for="d">설명:</label><textarea id="d" placeholder="모드팩에 대한 간단한 설명을 입력하세요." rows="3"></textarea></div>
+        <h3>모드 목록</h3>
+        <div id="mL"></div>
+        <button type="button" id="aM">새 모드 추가</button>
+      </form>
+    </div>
+    <div class="json-section">
       <h3>생성된 JSON</h3>
-      <pre id="jsonOutput"></pre>
-
-      <button type="button" id="downloadBtn">JSON 파일 다운로드</button>
-      <button type="button" id="copyJsonBtn">JSON 복사</button>
-    </form>
+      <pre id="jO"></pre>
+      <div class="button-container">
+        <button type="button" id="gJ">JSON 생성</button>
+        <button type="button" id="dB">JSON 파일 다운로드</button>
+        <button type="button" id="cJ">JSON 복사</button>
+        <button type="button" id="lJ">JSON 불러오기</button>
+      </div>
+    </div>
   </div>
-
   <script>
-    // HTML 요소
-    const jsonForm = document.getElementById('jsonForm');
-    const modListDiv = document.getElementById('modList');
-    const jsonOutput = document.getElementById('jsonOutput');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const copyJsonBtn = document.getElementById('copyJsonBtn');
-
-    // 모드 추가 버튼
-    document.getElementById('addModBtn').addEventListener('click', addModField);
-
-    // 모드 입력 필드 추가
-    function addModField() {
-      const modDiv = document.createElement('div');
-      modDiv.classList.add('mod');
-
-      modDiv.innerHTML = `
-        <label>모드 이름:</label>
-        <input type="text" class="modName" placeholder="모드 이름">
-        <label>모드 URL:</label>
-        <input type="url" class="modUrl" placeholder="모드 다운로드 URL">
-        <h4>종속성</h4>
-        <div class="dependencies"></div>
-        <button type="button" class="addDependencyBtn">종속성 추가</button>
-      `;
-
-      modDiv.querySelector('.addDependencyBtn').addEventListener('click', function() {
-        addDependencyField(modDiv);
-      });
-
-      modListDiv.appendChild(modDiv);
-    }
-
-    // 종속성 입력 필드 추가
-    function addDependencyField(modDiv) {
-      const depDiv = document.createElement('div');
-      depDiv.classList.add('dependency');
-
-      depDiv.innerHTML = `
-        <label>종속성 이름:</label>
-        <input type="text" class="depName" placeholder="종속성 이름">
-        <label>종속성 URL:</label>
-        <input type="url" class="depUrl" placeholder="종속성 다운로드 URL">
-        <button type="button" class="removeDependencyBtn">삭제</button>
-      `;
-
-      // 종속성 삭제 버튼 이벤트 리스너 추가
-      depDiv.querySelector('.removeDependencyBtn').addEventListener('click', function() {
-        depDiv.remove();  // 종속성 항목 삭제
-      });
-
-      modDiv.querySelector('.dependencies').appendChild(depDiv);
-    }
-
-    // JSON 생성 및 출력
-    jsonForm.addEventListener('input', generateJSON);
-
-    function generateJSON() {
-      const name = document.getElementById('name').value;
-      const author = document.getElementById('author').value;
-      const description = document.getElementById('description').value;
-
-      // 모드 리스트
-      const modList = {};
-      const dependencies = {};
-
-      document.querySelectorAll('.mod').forEach(mod => {
-        const modName = mod.querySelector('.modName').value;
-        const modUrl = mod.querySelector('.modUrl').value;
-        if (modName && modUrl) {
-          // ModList에 모드 추가
-          modList[modName] = modUrl;
-
-          // 종속성 리스트
-          const depList = {};
-          mod.querySelectorAll('.dependency').forEach(dep => {
-            const depName = dep.querySelector('.depName').value;
-            const depUrl = dep.querySelector('.depUrl').value;
-            if (depName && depUrl) {
-              depList[depName] = depUrl;
-            }
-          });
-
-          // 종속성 있으면 Dependencies 객체에 추가
-          if (Object.keys(depList).length > 0) {
-            dependencies[modName] = depList;
-          }
-        }
-      });
-
-      // JSON 객체
-      const json = {
-        type: "modpack",
-        name: name,
-        author: author,
-        Description: description,  // 'description' -> 'Description'으로 수정
-        ModList: modList,
-        Dependencies: dependencies
-      };
-
-      jsonOutput.textContent = JSON.stringify(json, null, 2);
-    }
-
-    // JSON 파일 다운로드
-    downloadBtn.addEventListener('click', function() {
-      const blob = new Blob([jsonOutput.textContent], { type: 'application/json' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `${document.getElementById('name').value || 'modpack'}.json`;
-      link.click();
-    });
-
-    // JSON 복사
-    copyJsonBtn.addEventListener('click', function() {
-      const jsonText = jsonOutput.textContent;
-      if (jsonText) {
-        const textarea = document.createElement('textarea');
-        textarea.value = jsonText;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        alert('JSON이 복사되었습니다!');
-      }
-    });
+    const jF=document.getElementById('jF'),mL=document.getElementById('mL'),jO=document.getElementById('jO'),gJ=document.getElementById('gJ'),dB=document.getElementById('dB'),cJ=document.getElementById('cJ'),aM=document.getElementById('aM'),lJ=document.getElementById('lJ');
+    aM.addEventListener('click',aF);gJ.addEventListener('click',gJsn);dB.addEventListener('click',dwnld);cJ.addEventListener('click',cpy);lJ.addEventListener('click',lJsn);
+    function aF(){const aD=document.createElement('div');aD.classList.add('mod');aD.innerHTML=`<button type="button" class="removeModBtn">모드 삭제</button><div class="input-group"><label>모드 이름:</label><input type="text" class="modName" placeholder="예: 슈퍼 아이템 모드"></div><div class="input-group"><label>모드 URL:</label><input type="url" class="modUrl" placeholder="예: https://example.com/super-item-mod.zip"></div><h4>종속성</h4><div class="dependencies"></div><button type="button" class="addDependencyBtn">종속성 추가</button>`;mL.appendChild(aD);
+      aD.querySelector('.addDependencyBtn').addEventListener('click',()=>dF(aD));aD.querySelector('.removeModBtn').addEventListener('click',()=>aD.remove());return aD;}
+    function dF(aD){const dD=document.createElement('div');dD.classList.add('dependency');dD.innerHTML=`<button type="button" class="removeDependencyBtn">종속성 삭제</button><div class="input-group"><label>종속성 이름:</label><input type="text" class="depName" placeholder="예: 기본 라이브러리"></div><div class="input-group"><label>종속성 URL:</label><input type="url" class="depUrl" placeholder="예: https://example.com/base-library.zip"></div>`;aD.querySelector('.dependencies').appendChild(dD);dD.querySelector('.removeDependencyBtn').addEventListener('click',()=>dD.remove());return dD;}
+    function gJsn(){const n=document.getElementById('n').value,a=document.getElementById('a').value,d=document.getElementById('d').value,mL={};document.querySelectorAll('.mod').forEach(m=>{const mN=m.querySelector('.modName').value,mU=m.querySelector('.modUrl').value;if(mN&&mU){mL[mN]=mU;const dM={};m.querySelectorAll('.dependency').forEach(d=>{const dN=d.querySelector('.depName').value,dU=d.querySelector('.depUrl').value;if(dN&&dU){dM[dN]=dU;}});if(Object.keys(dM).length>0){dM[mN]=dM;}}});const j={type:"modpack",name:n,author:a,Description:d,ModList:mL,Dependencies:{}};jO.textContent=JSON.stringify(j,null,2);}
+    function cpy(){const t=jO.textContent;navigator.clipboard.writeText(t).then(()=>alert('JSON이 클립보드에 복사되었습니다!')).catch(e=>console.error('복사 실패:',e));}
+    function dwnld(){const t=jO.textContent,b=new Blob([t],{type:'application/json'}),u=URL.createObjectURL(b),l=document.createElement('a');l.href=u;l.download='config.json';l.click();URL.revokeObjectURL(u);}
+    function lJsn(){const input=document.createElement('input');input.type='file';input.accept='.json';input.addEventListener('change',e=>{const f=e.target.files[0];if(f){const r=new FileReader();r.onload=()=>{const j=JSON.parse(r.result);document.getElementById('n').value=j.name;document.getElementById('a').value=j.author;document.getElementById('d').value=j.Description;}};r.readAsText(f);});input.click();}
   </script>
 </body>
 </html>
