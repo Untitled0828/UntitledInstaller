@@ -1,0 +1,11 @@
+{
+  "templates": [
+    {
+      "url": "https://raw.githubusercontent.com/Untitled0828/UntitledInstaller/main/file/example.json"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Untitled0828/UntitledInstaller/main/templates/test_modpack.json"
+    }
+    // 여기에 더 많은 템플릿을 추가할 수 있습니다
+  ]
+}
