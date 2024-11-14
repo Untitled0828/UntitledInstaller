@@ -1,9 +1,9 @@
 {
   "type": "modpack",
-  "name": "Untitled Modpack",
+  "name": "Example Modpack",
   "hash": "ddd3d0e9ac1538659197a4c6558972de503937daf1342105c40fa54cd2617f23",
   "author": "Untitled",
-  "Description": "테스트 모드팩\n테스트용 으로 만들어진 모드팩 모드 리스트입니다.",
+  "Description": "예시용 모드팩입니다.\nExample Modlist",
   "ModList": {
     "SAIN": "https://github.com/Solarint/SAIN/releases/download/v3.1.0-Release/SAIN-3.1.0-Release.7z",
     "Donuts": "https://github.com/p-kossa/nookys-swag-presets-spt/releases/download/v3.5.1/SWAG-Donuts-v3.5.1-SPT39x.zip",
